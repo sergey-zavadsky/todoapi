@@ -2,6 +2,9 @@ import express, { RequestHandler } from 'express';
 import { ObjectId } from 'mongodb';
 import { Todo } from '../models/todo';
 import db from '../db/dbConnection';
+import '../loadEnvironment';
+
+const dbCollection = process.env.DB_COLLECTION || '';
 
 export const createTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
@@ -17,9 +20,7 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 		const date = new Date().toISOString();
 		const newTodo = new Todo(date, text);
 
-		const result = await dbCon.сonnection
-			?.collection('todosList')
-			.insertOne(newTodo);
+		await dbCon.сonnection?.collection(dbCollection || '').insertOne(newTodo);
 
 		return res.status(201).json({ message: 'Todo has been created', newTodo });
 	} catch (error) {
@@ -34,7 +35,7 @@ export const getTodos: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 	try {
 		const result = await dbCon.сonnection
-			?.collection('todosList')
+			?.collection(dbCollection)
 			.find({})
 			.limit(50)
 			.toArray();
@@ -67,9 +68,7 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 			$set: { text, updatedDate },
 		};
 
-		const result = await dbCon.сonnection
-			?.collection('todosList')
-			.updateOne(query, updates);
+		await dbCon.сonnection?.collection(dbCollection).updateOne(query, updates);
 
 		return res.status(200).json({ message: 'Todo has been updated', text });
 	} catch (error) {
@@ -86,9 +85,7 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 		const id = new ObjectId(req.params.id as unknown as string);
 		const query = { _id: id };
 
-		const result = await dbCon.сonnection
-			?.collection('todosList')
-			.deleteOne(query);
+		await dbCon.сonnection?.collection(dbCollection).deleteOne(query);
 
 		return res.status(200).json({ message: 'Todo has been deleted', query });
 	} catch (error) {
