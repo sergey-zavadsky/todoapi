@@ -40,7 +40,7 @@ export const getTodos: RequestHandler = async (req, res, next) => {
 			.limit(50)
 			.toArray();
 
-		return res.status(200).json({ ...result });
+		return res.status(200).json(result);
 	} catch (error) {
 		return res.status(400).json({ message: error });
 	} finally {
@@ -87,7 +87,7 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 
 		await dbCon.сonnection?.collection(dbCollection).deleteOne(query);
 
-		return res.status(200).json({ message: 'Todo has been deleted', query });
+		return res.status(200).json({ message: 'Todo has been deleted', id });
 	} catch (error) {
 		return res.status(400).json({ message: error });
 	} finally {
@@ -104,7 +104,7 @@ export const deleteTodoMany: RequestHandler = async (req, res, next) => {
 
 		await dbCon.сonnection?.collection(dbCollection).deleteMany(query);
 
-		return res.status(200).json({ message: 'Todos has been deleted', query });
+		return res.status(200).json({ message: 'Todos has been deleted', ids });
 	} catch (error) {
 		return res.status(400).json({ message: error });
 	} finally {
