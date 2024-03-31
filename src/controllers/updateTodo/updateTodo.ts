@@ -1,17 +1,20 @@
 import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
+import { validateText } from '../validations';
 
 export const updateTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 
 	try {
 		const text = (req.body as { text: string }).text;
-		if (!text) {
-			return res.status(400).json({ message: 'Text is required' });
-		}
-		if (typeof text !== 'string') {
-			return res.status(400).json({ message: 'Text should be type of String' });
+
+		try {
+			validateText(text);
+		} catch (error) {
+			const message = (error as Error).message;
+
+			return res.status(400).json({ message: message });
 		}
 
 		const updatedAt = new Date().toISOString();
