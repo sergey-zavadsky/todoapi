@@ -26,6 +26,7 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 
 		const item = dbCon.сonnection?.collection(dbCollection);
 		const findItem = await item?.findOne(query);
+
 		await item?.updateOne(query, updates);
 
 		console.log('MongoDB disconnected');
@@ -37,6 +38,6 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 	} catch (error) {
 		console.log('MongoDB disconnected');
 		dbCon.client.close();
-		return res.status(400).json({ message: error });
+		return res.status(400).json({ message: (error as Error).message });
 	}
 };

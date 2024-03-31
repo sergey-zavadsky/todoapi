@@ -6,16 +6,25 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 	try {
 		const id = new ObjectId(req.params.id as unknown as string);
-		const query = { _id: id };
 
-		await dbCon.сonnection?.collection(dbCollection).deleteOne(query);
+		const query = { _id: id };
+		const item = dbCon.сonnection?.collection(dbCollection);
+		const findItem = await item?.findOne(query);
+
+		if (!findItem) {
+			dbCon.client.close();
+
+			return res.status(404).json({ message: 'Todo not found' });
+		}
+
+		await item?.deleteOne(query);
 		dbCon.client.close();
 
-		return res.status(200).json({ message: 'Todo has been deleted', id });
+		return res.status(200).json({ message: 'Todo has been deleted', query });
 	} catch (error) {
 		dbCon.client.close();
 
-		return res.status(400).json({ message: error });
+		return res.status(400).json({ message: (error as Error).message });
 	} finally {
 		console.log('MongoDB disconnected');
 	}
