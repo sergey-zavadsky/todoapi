@@ -16,4 +16,6 @@ const db = async () => {
 	return { сonnection, client };
 };
 
-export default db;
+const dbCollection = process.env.DB_COLLECTION || '';
+
+export { db, dbCollection };

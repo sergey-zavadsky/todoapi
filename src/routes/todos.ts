@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import {
-	createTodo,
-	getTodos,
-	updateTodo,
-	deleteTodo,
-	deleteTodoMany,
-} from '../controllers/todos';
+import { deleteTodoMany } from '../controllers/deleteTodoMany/deleteTodoMany';
+import { getTodos } from '../controllers/getTodos/getTodos';
+import { createTodo } from '../controllers/createTodo/createTodo';
+import { updateTodo } from '../controllers/updateTodo/updateTodo';
+import { deleteTodo } from '../controllers/deleteTodo/deleteTodo';
+
 const router = Router();
 
 router.post('/', createTodo);
