@@ -7,7 +7,8 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 
 	try {
-		const text = (req.body as { text: string }).text;
+		const { text } = req.body as { text: string };
+		const { isDone } = req.body as { isDone: boolean };
 
 		try {
 			validateText(text);
@@ -21,20 +22,24 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 		const id = new ObjectId(req.params.id as unknown as string);
 		const query = { _id: id };
 		const updates = {
-			$set: { text, updatedAt },
+			$set: { text, updatedAt, isDone },
 		};
 
 		const item = dbCon.сonnection?.collection(dbCollection);
-		const findItem = await item?.findOne(query);
 
 		await item?.updateOne(query, updates);
+		const findItem = await item?.findOne(query);
 
 		console.log('MongoDB disconnected');
 		dbCon.client.close();
 
-		return res
-			.status(200)
-			.json({ id, text, updatedAt, createdAt: findItem?.createdAt });
+		return res.status(200).json({
+			id,
+			text,
+			updatedAt,
+			createdAt: findItem?.createdAt,
+			isDone: findItem?.isDone,
+		});
 	} catch (error) {
 		console.log('MongoDB disconnected');
 		dbCon.client.close();

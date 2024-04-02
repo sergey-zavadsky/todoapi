@@ -20,7 +20,7 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 		await item?.deleteOne(query);
 		dbCon.client.close();
 
-		return res.status(200).json({ message: 'Todo has been deleted', query });
+		return res.status(200).json({ id: id, text: findItem.text });
 	} catch (error) {
 		dbCon.client.close();
 
