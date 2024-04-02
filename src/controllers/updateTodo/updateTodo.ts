@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
-import { validateText } from '../validations';
+import { validateText, validateIsDone } from '../validations';
 
 export const updateTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
@@ -12,6 +12,7 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 
 		try {
 			validateText(text);
+			validateIsDone(isDone);
 		} catch (error) {
 			const message = (error as Error).message;
 
