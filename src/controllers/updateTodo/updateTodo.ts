@@ -8,11 +8,13 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 
 	try {
 		const { text } = req.body as { text: string };
-		const { isDone } = req.body as { isDone: boolean };
+		const { isDone } = req.body as { isDone?: boolean };
 
 		try {
 			validateText(text);
-			validateIsDone(isDone);
+			if (isDone !== undefined) {
+				validateIsDone(isDone);
+			}
 		} catch (error) {
 			const message = (error as Error).message;
 
