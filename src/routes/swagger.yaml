@@ -1,0 +1,112 @@
+tags:
+  - name: todos
+    description: crud operations on todos
+paths:
+  /todos:
+    post:
+      tags:
+        - todos
+      summary: Create a new todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                isDone:
+                  type: boolean
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/todos'
+    get:
+      tags:
+        - todos
+      summary: Get all todos
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/todos'
+  /todos/{todoId}:
+    patch:
+      tags:
+        - todos
+      summary: Update a todo by id
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The id of the todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+              properties:
+                text:
+                  type: string
+                isDone:
+                  type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/todos'
+    delete:
+      tags:
+        - todos
+      summary: Delete a todo by id
+      parameters:
+        - name: todoId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The id of the todo
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/todos'
+components:
+  schemas:
+    todos:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: 'Buy milk'
+        isDone:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: '2020-01-01T00:00:00.000Z'
+        _id:
+          type: string
+          example: '5e0e4b3b7e3e4b0017b1b3b1'
