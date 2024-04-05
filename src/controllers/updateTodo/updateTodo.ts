@@ -2,13 +2,13 @@ import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
 import { validateText, validateIsDone } from '../validations';
+import { TodoRequestBody } from '../interfaces/Todo.requestBody.interface';
 
 export const updateTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 
 	try {
-		const { text } = req.body as { text: string };
-		const { isDone } = req.body as { isDone?: boolean };
+		const { text, isDone } = req.body as TodoRequestBody;
 
 		try {
 			validateText(text);

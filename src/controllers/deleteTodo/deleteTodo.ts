@@ -1,10 +1,7 @@
 import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
-
-interface TodoParams {
-	id: string;
-}
+import { TodoParams } from '../interfaces/todo.requestParams.interface';
 
 const validateParams = (params: TodoParams) => {
 	if (!params.id) {

@@ -90,6 +90,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/todos'
+  /todos/many/{todoIds}:
+    delete:
+      tags:
+        - todos
+      summary: Delete list todos by ids
+      parameters:
+        - name: todoIds
+          in: path
+          required: true
+          schema:
+            type: array
+          items:
+            type: string
+          description: The ids of the todos
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/todos'
+
 components:
   schemas:
     todos:
