@@ -2,11 +2,25 @@ import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
 
+interface TodoParams {
+	ids: string;
+}
+
+const validateParams = (params: TodoParams) => {
+	if (!params.ids) {
+		throw new Error('IDs are required');
+	}
+};
+
 export const deleteTodoMany: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
+
 	try {
-		const ids = req.params.ids.split(',').map((id) => new ObjectId(id));
-		const query = { _id: { $in: ids } };
+		const { ids } = req.params as unknown as TodoParams;
+		validateParams({ ids });
+
+		const objectIds = ids.split(',').map((id) => new ObjectId(id));
+		const query = { _id: { $in: objectIds } };
 
 		await dbCon.сonnection?.collection(dbCollection).deleteMany(query);
 
