@@ -3,17 +3,25 @@ import { db, dbCollection } from '../../db/dbConnection';
 import { Todo } from '../../models/todo';
 import { validateIsDone, validateText } from '../validations';
 
+interface TodoRequestBody {
+	text: string;
+	isDone?: boolean;
+}
+
+const validateRequestBody = (body: TodoRequestBody) => {
+	validateText(body.text);
+	if (body.isDone !== undefined) {
+		validateIsDone(body.isDone);
+	}
+};
+
 export const createTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 	try {
-		const text = (req.body as { text: string }).text;
-		const isDone = (req.body as { isDone?: boolean }).isDone;
+		const { text, isDone } = req.body as TodoRequestBody;
 
 		try {
-			validateText(text);
-			if (isDone !== undefined) {
-				validateIsDone(isDone);
-			}
+			validateRequestBody({ text, isDone });
 		} catch (error) {
 			const message = (error as Error).message;
 
