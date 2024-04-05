@@ -2,12 +2,24 @@ import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
 
+interface TodoParams {
+	id: string;
+}
+
+const validateParams = (params: TodoParams) => {
+	if (!params.id) {
+		throw new Error('ID is required');
+	}
+};
+
 export const deleteTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
 	try {
-		const id = new ObjectId(req.params.id as unknown as string);
+		const { id } = req.params as unknown as TodoParams;
+		validateParams({ id });
 
-		const query = { _id: id };
+		const objectId = new ObjectId(id);
+		const query = { _id: objectId };
 		const item = dbCon.сonnection?.collection(dbCollection);
 		const findItem = await item?.findOne(query);
 
