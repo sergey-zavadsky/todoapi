@@ -22,9 +22,6 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 		const updatedAt = new Date().toISOString();
 		const id = new ObjectId(req.params.id as unknown as string);
 		const query = { _id: id };
-		const updates = {
-			$set: { text, updatedAt, isDone },
-		};
 
 		const item = db.collection(dbCollection);
 
@@ -33,6 +30,11 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 		if (!findItem) {
 			return res.status(404).json({ message: 'Todo not found' });
 		}
+
+		const updateIsDone = isDone !== undefined ? isDone : findItem.isDone;
+		const updates = {
+			$set: { text, updatedAt, isDone: updateIsDone },
+		};
 
 		await item?.updateOne(query, updates);
 
