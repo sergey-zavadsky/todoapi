@@ -7,7 +7,7 @@
 		"test": "vitest",
 		"coverage": "vitest run --coverage",
 		"watch:build": "tsc --watch",
-		"start": "concurrently \"tsc --watch\" \"nodemon dist/app.js\""
+		"start": "concurrently \"tsc --watch\" \"nodemon dist/app.js --trace-deprecation\""
 	},
 	"author": "",
 	"license": "ISC",

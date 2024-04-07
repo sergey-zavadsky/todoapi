@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { ObjectId } from 'mongodb';
 import { validateText, validateIsDone } from '../validations';
-import { TodoRequestBody } from '../interfaces/Todo.requestBody.interface';
+import { TodoRequestBody } from '../interfaces/todo.requestBody.interface';
 
 export const updateTodo: RequestHandler = async (req, res, next) => {
 	const dbCon = await db();
@@ -33,9 +33,6 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 		await item?.updateOne(query, updates);
 		const findItem = await item?.findOne(query);
 
-		console.log('MongoDB disconnected');
-		dbCon.client.close();
-
 		return res.status(200).json({
 			id,
 			text,
@@ -44,8 +41,9 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 			isDone: findItem?.isDone,
 		});
 	} catch (error) {
-		console.log('MongoDB disconnected');
-		dbCon.client.close();
 		return res.status(400).json({ message: (error as Error).message });
+	} finally {
+		dbCon.client.close();
+		console.log('MongoDB disconnected');
 	}
 };

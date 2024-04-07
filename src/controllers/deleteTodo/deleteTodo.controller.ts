@@ -21,20 +21,16 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 		const findItem = await item?.findOne(query);
 
 		if (!findItem) {
-			dbCon.client.close();
-
 			return res.status(404).json({ message: 'Todo not found' });
 		}
 
 		await item?.deleteOne(query);
-		dbCon.client.close();
 
 		return res.status(200).json({ id: id, text: findItem.text });
 	} catch (error) {
-		dbCon.client.close();
-
 		return res.status(400).json({ message: (error as Error).message });
 	} finally {
+		dbCon.client.close();
 		console.log('MongoDB disconnected');
 	}
 };

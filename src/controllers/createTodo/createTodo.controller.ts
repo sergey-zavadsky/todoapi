@@ -2,10 +2,11 @@ import { RequestHandler } from 'express';
 import { db, dbCollection } from '../../db/dbConnection';
 import { Todo } from '../../models/todo';
 import { validateIsDone, validateText } from '../validations';
-import { TodoRequestBody } from '../interfaces/Todo.requestBody.interface';
+import { TodoRequestBody } from '../interfaces/todo.requestBody.interface';
 
 const validateRequestBody = (body: TodoRequestBody) => {
 	validateText(body.text);
+
 	if (body.isDone !== undefined) {
 		validateIsDone(body.isDone);
 	}
