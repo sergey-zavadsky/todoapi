@@ -10,14 +10,13 @@ const validateParams = (params: TodoParams) => {
 };
 
 export const deleteTodo: RequestHandler = async (req, res, next) => {
-	const dbCon = await db();
 	try {
 		const { id } = req.params as unknown as TodoParams;
 		validateParams({ id });
 
 		const objectId = new ObjectId(id);
 		const query = { _id: objectId };
-		const item = dbCon.сonnection?.collection(dbCollection);
+		const item = db.collection(dbCollection);
 		const findItem = await item?.findOne(query);
 
 		if (!findItem) {
@@ -29,8 +28,5 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 		return res.status(200).json({ id: id, text: findItem.text });
 	} catch (error) {
 		return res.status(400).json({ message: (error as Error).message });
-	} finally {
-		dbCon.client.close();
-		console.log('MongoDB disconnected');
 	}
 };

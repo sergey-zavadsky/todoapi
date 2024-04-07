@@ -1,21 +1,21 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 import '../loadEnvironment';
 
 const connectionString = process.env.ATLAS_URI;
+const dbCollection = process.env.DB_COLLECTION || '';
+const dbName = process.env.DB_NAME || '';
+const client = new MongoClient(connectionString || '');
 
-const db = async () => {
-	const client = new MongoClient(connectionString || '');
-	let сonnection;
+let db: Db;
+
+(async () => {
 	try {
-		const connected = await client.connect();
+		const connection = await client.connect();
+		db = connection.db(dbName);
 		console.log('Connected to MongoDB');
-		сonnection = connected.db('todos');
 	} catch (error) {
 		console.error('Error connecting to MongoDB:', error);
 	}
-	return { сonnection, client };
-};
-
-const dbCollection = process.env.DB_COLLECTION || '';
+})();
 
 export { db, dbCollection };

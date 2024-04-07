@@ -5,8 +5,6 @@ import { validateText, validateIsDone } from '../validations';
 import { TodoRequestBody } from '../interfaces/todo.requestBody.interface';
 
 export const updateTodo: RequestHandler = async (req, res, next) => {
-	const dbCon = await db();
-
 	try {
 		const { text, isDone } = req.body as TodoRequestBody;
 
@@ -28,10 +26,15 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 			$set: { text, updatedAt, isDone },
 		};
 
-		const item = dbCon.сonnection?.collection(dbCollection);
+		const item = db.collection(dbCollection);
+
+		const findItem = await item?.findOne(query);
+
+		if (!findItem) {
+			return res.status(404).json({ message: 'Todo not found' });
+		}
 
 		await item?.updateOne(query, updates);
-		const findItem = await item?.findOne(query);
 
 		return res.status(200).json({
 			id,
@@ -42,8 +45,5 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 		});
 	} catch (error) {
 		return res.status(400).json({ message: (error as Error).message });
-	} finally {
-		dbCon.client.close();
-		console.log('MongoDB disconnected');
 	}
 };
