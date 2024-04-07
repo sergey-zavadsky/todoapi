@@ -30,7 +30,7 @@ const swaggerUiConfig = {
 		],
 	},
 
-	apis: ['src/routes/*.yaml'],
+	apis: ['docs/*.yaml'],
 };
 
 const app = express();
