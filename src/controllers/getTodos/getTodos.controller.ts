@@ -5,7 +5,7 @@ export const getTodos: RequestHandler = async (req, res, next) => {
 	try {
 		const result = await db
 			.collection(dbCollection)
-			.find({})
+			.find({ userId: req.userId })
 			.limit(50)
 			.toArray();
 		return res.status(200).json(result);

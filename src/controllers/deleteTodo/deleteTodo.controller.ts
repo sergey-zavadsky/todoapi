@@ -15,7 +15,7 @@ export const deleteTodo: RequestHandler = async (req, res, next) => {
 		validateParams({ id });
 
 		const objectId = new ObjectId(id);
-		const query = { _id: objectId };
+		const query = { _id: objectId, userId: req.userId };
 		const item = db.collection(dbCollection);
 		const findItem = await item?.findOne(query);
 

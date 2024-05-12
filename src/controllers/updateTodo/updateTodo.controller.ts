@@ -21,7 +21,7 @@ export const updateTodo: RequestHandler = async (req, res, next) => {
 
 		const updatedAt = new Date().toISOString();
 		const id = new ObjectId(req.params.id as unknown as string);
-		const query = { _id: id };
+		const query = { _id: id, userId: req.userId };
 
 		const item = db.collection(dbCollection);
 

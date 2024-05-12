@@ -18,7 +18,7 @@ export const deleteTodoMany: RequestHandler = async (req, res, next) => {
 		validateParams({ ids });
 
 		const objectIds = ids.split(',').map((id) => new ObjectId(id));
-		const query = { _id: { $in: objectIds } };
+		const query = { _id: { $in: objectIds }, userId: req.userId };
 
 		await db.collection(dbCollection).deleteMany(query);
 

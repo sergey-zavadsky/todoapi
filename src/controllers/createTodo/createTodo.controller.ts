@@ -25,11 +25,18 @@ export const createTodo: RequestHandler = async (req, res, next) => {
 		}
 
 		const date = new Date().toISOString();
-		const newTodo = new Todo(date, text, isDone);
+		const userId = req.userId;
+		const newTodo = new Todo(date, text, isDone, userId);
 
-		await db.collection(dbCollection).insertOne(newTodo);
+		const result = await db.collection(dbCollection).insertOne(newTodo);
+		const responseTodo = {
+			_id: result.insertedId,
+			date: newTodo.createdAt,
+			text: newTodo.text,
+			isDone: newTodo.isDone,
+		};
 
-		return res.status(201).json(newTodo);
+		return res.status(201).json(responseTodo);
 	} catch (error) {
 		return res.status(400).json({ message: error });
 	}
